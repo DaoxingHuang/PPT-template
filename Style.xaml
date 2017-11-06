@@ -1,0 +1,747 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:igPrim="http://schemas.infragistics.com/xaml/primitives"
+                    xmlns:local="clr-namespace:Prism.RRT"
+                    xmlns:converter="clr-namespace:Prism.RRT.View"
+                    xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" 
+                    xmlns:Common="clr-namespace:Prism.RRT.Common" mc:Ignorable="d">
+    <converter:StringEmptyToVisibityConverter x:Key="StringToVisibity"/>
+    <converter:WidthToPindingLeftConverter x:Key="WidthToPindingLeft"/>
+
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MyFocusVisualStyte}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator>
+                        <BulletDecorator.Bullet>
+                            <Grid Height="{TemplateBinding Height}" Width="{Binding Height, RelativeSource={RelativeSource Self}, UpdateSourceTrigger=PropertyChanged}"
+								MinHeight="30" MinWidth="30" ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="4*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="4*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="4*" />
+                                </Grid.RowDefinitions>
+
+                                <Border x:Name="MainBorder"
+									Grid.ColumnSpan="9" Grid.RowSpan="9"
+									CornerRadius="4"
+									BorderThickness="1"
+									Background="Transparent" />
+
+                                <Border x:Name="InnerBorder"
+									Grid.Column="1" Grid.ColumnSpan="5"
+									Grid.Row="2" Grid.RowSpan="5"
+									BorderThickness="1"
+									BorderBrush="#808080" />
+
+                                <Path x:Name="InnerPath"
+									Grid.Column="1" Grid.ColumnSpan="5"
+									Grid.Row="2" Grid.RowSpan="5"
+									Data="M31,5 L19.5,5 19.5,19.5 34.5,19.5 34.5,11.75"
+									Stretch="Fill" Stroke="#808080"/>
+
+                                <Path x:Name="CheckMark"
+									Grid.Column="2" Grid.ColumnSpan="5"
+									Grid.Row="1" Grid.RowSpan="5"
+									Opacity="0"
+									Data="M9.07743946676476E-09,4.31805768640244L4.68740335877841,8.86361158398516C4.68740335877841,8.86361158398516,16.3281249985376,-2.42451336648723,16.3281249985376,-2.42451336648723L14.0622100581796,-4.77304938341948 4.68740335877846,4.31805791992662 2.22656251699567,1.93164208562579z"
+									Fill="#3babe3"
+									Stretch="Fill"
+									Stroke="#3babe3" />
+
+                                <Path x:Name="InderminateMark"
+									Grid.Column="3"
+									Grid.Row="4"
+									Data="M0,4 L1,5 5,1 4,0"
+									Opacity="0"
+									Stretch="Fill"
+									StrokeThickness="0"
+									Fill="#808080" />
+                            </Grid>
+                        </BulletDecorator.Bullet>
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CheckStates">
+                                <vsm:VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+											Storyboard.TargetName="CheckMark" Duration="0:0:0.2" To="1" />
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+											Storyboard.TargetName="CheckMark" Duration="0:0:0.2" To="0" />
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Indeterminate">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+											Storyboard.TargetName="InderminateMark" Duration="0:0:0.2" To="1" />
+                                    </Storyboard>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <ContentPresenter Margin="4,0,4,0"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left"
+							RecognizesAccessKey="True" />
+                    </BulletDecorator>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="InnerBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="MainBorder" Property="Background" Value="#81d2eb" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="CheckMark" Property="Fill" Value="#cccccc" />
+                            <Setter TargetName="CheckMark" Property="Stroke" Value="#cccccc" />
+                            <Setter TargetName="InnerPath" Property="Stroke" Value="#cccccc" />
+                            <Setter TargetName="InderminateMark" Property="Fill" Value="#cccccc" />
+                            <Setter TargetName="InnerBorder" Property="BorderBrush" Value="#cccccc" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CheckRadioFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle StrokeDashArray="1 2" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" Margin="14,0,0,0"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="rbTrackListStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Background" Value="#F4F4F4"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Grid>
+                        <Rectangle x:Name="rectangle"  RadiusX="2" RadiusY="2" Opacity="0.2"/>
+
+                        <Image x:Name="image" Source="/Prism.RRT;component/Style/images/radionuncheckedlist.png" Stretch="None"/>
+
+
+                    </Grid>
+
+
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Source" TargetName="image" Value="/Prism.RRT;component/Style/images/radioncheckedlist.png"/>
+                            <Setter Property="Fill" TargetName="rectangle" Value="Gray"/>
+                        </Trigger>
+                        <Trigger Property="HasContent" Value="true">
+                            <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}"/>
+                            <Setter Property="Padding" Value="0,0,0,0"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="rbTrackTreeStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Background" Value="#F4F4F4"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Grid>
+                        <Rectangle x:Name="rectangle"  RadiusX="2" RadiusY="2" Opacity="0.2"/>
+
+                        <Image x:Name="image" Height="Auto" Width="Auto" Source="/Prism.RRT;component/Style/images/radionuncheckedtree.png" Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Source" TargetName="image" Value="/Prism.RRT;component/Style/images/radioncheckedtree.png"/>
+                            <Setter Property="Fill" TargetName="rectangle" Value="Gray"/>
+                        </Trigger>
+                        <Trigger Property="HasContent" Value="true">
+                            <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}"/>
+                            <Setter Property="Padding" Value="4,0,0,0"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="TreeItemButton" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="#cccccc"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#333333"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Polygon x:Name="polygon" Points="{Binding Points, RelativeSource={RelativeSource TemplatedParent}}" Fill="{TemplateBinding Background}"/>
+                        <StackPanel  Orientation="Vertical" d:LayoutOverrides="Height" VerticalAlignment="Center">
+                            <TextBlock x:Name="textBlock" Foreground="{TemplateBinding Foreground}"  Text="{TemplateBinding Content}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="11"/>
+                            <TextBlock x:Name="request" Text="(Click to Request)" Visibility="{Binding IsShowRequest, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="11" Foreground="{TemplateBinding Foreground}" FontWeight="Bold" />
+                            <TextBlock x:Name="confirm" Text="(Click to Confirm)" Visibility="{Binding IsShowConfirm, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Foreground="{TemplateBinding Foreground}"  FontWeight="Bold"/>
+                            <TextBlock x:Name="sp" Text="(Click to Proceed)" Visibility="{Binding IsShowSP, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Foreground="{TemplateBinding Foreground}"  FontWeight="Bold"/>
+                            <TextBlock x:Name="reRun" Text="(Click for Re-Run)" Visibility="{Binding IsShowReRun, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Foreground="{TemplateBinding Foreground}"  FontWeight="Bold"/>
+                            <TextBlock x:Name="SupportReRun" Text="(Click for Re-Run)" Visibility="{Binding IsShowSupportRerun, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10" Foreground="{TemplateBinding Foreground}"  FontWeight="Bold"/>
+
+                        </StackPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Fill" TargetName="polygon" Value="LightBlue"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+
+                            <Setter Property="Fill" TargetName="polygon" Value="#FF802424"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+
+                            <Setter Property="Fill" TargetName="polygon" Value="#FF808015"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="true"/>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <LinearGradientBrush x:Key="HeaderHoverBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <LinearGradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Offset="0" Color="SkyBlue"/>
+                <GradientStop Offset="0.37" Color="RoyalBlue"/>
+                <GradientStop Offset="1" Color="SteelBlue"/>
+            </GradientStopCollection>
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <LinearGradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Offset="0" Color="DarkGray"/>
+                <GradientStop Offset="0.4" Color="DimGray"/>
+                <GradientStop Offset="1" Color="Gray"/>
+            </GradientStopCollection>
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <Style TargetType="{x:Type igPrim:GroupByCellControl}" x:Key="groupByRowStyle">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource HeaderBackgroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type igPrim:GroupByCellControl}">
+                    <Grid>
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="MouseOver">
+                                    <Storyboard >
+                                        <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="MouseOver1" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" x:Name="NormalFill"/>
+                        <Rectangle Fill="{StaticResource HeaderHoverBackgroundBrush}" x:Name="MouseOver1" Visibility="Collapsed" Margin="{TemplateBinding BorderThickness}"/>
+                        <ContentPresenter  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FooterCellControlStyle1" TargetType="{x:Type igPrim:FooterCellControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate >
+                    <Rectangle Fill="#FF1F1A1A" HorizontalAlignment="Stretch" Height="1"  Stroke="Black" VerticalAlignment="Top" Width="Auto" Margin="-10,0,0,0"/>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <LinearGradientBrush x:Key="TextBoxBorder" StartPoint="0,0" MappingMode="Absolute" EndPoint="0,20">
+        <GradientStop Color="#ABADB3" Offset="0.05"/>
+        <GradientStop Color="#E2E3EA" Offset="0.07"/>
+        <GradientStop Color="#E3E9EF" Offset="1"/>
+    </LinearGradientBrush>
+    <Style x:Key="TextBoxStyle1" BasedOn="{x:Null}" TargetType="{x:Type Common:MyTextBox}">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="AllowDrop" Value="true"/>
+
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type  Common:MyTextBox}">
+                    <Grid>
+
+                        <Themes:ListBoxChrome  x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  RenderMouseOver="{TemplateBinding IsMouseOver}" RenderFocused="{TemplateBinding IsKeyboardFocusWithin}" SnapsToDevicePixels="true" Height="32" d:LayoutOverrides="LeftPosition, RightPosition" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
+
+                            <Grid >
+
+                                <TextBlock x:Name="textBlock" Visibility="{TemplateBinding Text, Converter={StaticResource StringToVisibity}}" Text="{Binding PlaceHolder, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"  Padding="20,0,0,0"  Foreground="#FFDCD5D5" Opacity="0.8"  VerticalAlignment="Center"  Margin="0"/>
+
+                                <ScrollViewer x:Name="PART_ContentHost"  Tag="{Binding PlaceHolder, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" Template="{DynamicResource ScrollViewerControlTemplate1}" Margin="16,0,0,0" Background="{x:Null}"
+                                            />
+                            </Grid>
+                            <!--Padding="{Binding Width, ElementName=image, Mode=OneWay,Converter={StaticResource WidthToPindingLeft},UpdateSourceTrigger=PropertyChanged}"-->
+                        </Themes:ListBoxChrome>
+                        <Image  x:Name="image" Width="12" Source="{Binding Icon, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                    <Condition Property="IsSelectionActive" Value="false"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                <Setter Property="Visibility" Value="Hidden"/>
+
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+    <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+        <Grid x:Name="Grid" Background="{TemplateBinding Background}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+            <!--<ScrollContentPresenter x:Name="PlaceHolder" CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="User Name" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>-->
+            <!--<TextBox x:Name="textBox" Text="{TemplateBinding Content}"  Padding="20,0,0,0"  Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" VerticalAlignment="Center"/>-->
+            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"  CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}"/>
+            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
+        </Grid>
+
+    </ControlTemplate>
+
+
+    <Style x:Key="ButtonCloseStyle2" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Padding" Value="5,3,5,3" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="grid" Margin="0,3">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+
+
+
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                        <GradientStop Color="#FFF75050" Offset="0"/>
+                                                        <GradientStop Color="#FFA62F2F" Offset="0.5"/>
+                                                        <GradientStop Color="#FFFF6C6C" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle_Copy">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                        <GradientStop Color="#FFF75050" Offset="0"/>
+                                                        <GradientStop Color="#FFA62F2F" Offset="0.5"/>
+                                                        <GradientStop Color="#FFFF6C6C" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+
+
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Pressed"/>
+                                <vsm:VisualState x:Name="Disabled"/>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused"/>
+                                <vsm:VisualState x:Name="Unfocused"/>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rectangle" StrokeThickness="0" StrokeLineJoin="Round" Margin="0,-5,0,-3" RadiusX="5" RadiusY="5"/>
+                        <Rectangle x:Name="rectangle_Copy" StrokeThickness="0" StrokeLineJoin="Round" Margin="0,-5,5,-3" RadiusX="0" RadiusY="0"/>
+
+                        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Width="{Binding ActualHeight, ElementName=grid}" Height="{Binding ActualHeight, ElementName=grid}" >
+
+                            <Polyline x:Name="polyline"  Stroke="#FFFFFF"   Points="0,10 5,5 0,0" StrokeLineJoin="Round" StrokeThickness="2" VerticalAlignment="Stretch"/>
+                            <Polyline x:Name="polyline1"  Stroke="#FFFFFF"   Points="10,0 5,5 10,10" StrokeLineJoin="Round" StrokeThickness="2" VerticalAlignment="Stretch"/>
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonCloseStyle3" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="grid" Margin="0,3">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF1A87D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+
+
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF0C81D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Disabled"/>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused"/>
+                                <vsm:VisualState x:Name="Unfocused"/>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rectangle" StrokeThickness="0" StrokeLineJoin="Round" Margin="0,-5,0,-3" RadiusX="0" RadiusY="0"/>
+                        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Width="{Binding ActualHeight, ElementName=grid}" Height="{Binding ActualHeight, ElementName=grid}" >
+
+                            <Polyline x:Name="polyline"  Stroke="#FFFFFF"   Points="2,2 0,2 0,10 8,10 8,8" StrokeLineJoin="Round" StrokeThickness="1" VerticalAlignment="Stretch"/>
+                            <Polyline x:Name="polyline1"  Stroke="#FFFFFF"   Points="3,0 3,6 10,6 10,0 3,0" StrokeLineJoin="Round" StrokeThickness="1" VerticalAlignment="Stretch"/>
+
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonCloseStyle4" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Padding" Value="5,3,5,3" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="grid" Margin="0,3">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+
+
+
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF1A87D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+
+
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF0C81D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Disabled"/>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused"/>
+                                <vsm:VisualState x:Name="Unfocused"/>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rectangle" StrokeThickness="0" StrokeLineJoin="Round" Margin="0,-5,0,-3" RadiusX="0" RadiusY="0"/>
+                        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Width="{Binding ActualHeight, ElementName=grid}" Height="{Binding ActualHeight, ElementName=grid}" >
+
+                            <Polyline x:Name="polyline"  Stroke="#FFFFFF"   Points="0,7 10,7" StrokeLineJoin="Round" StrokeThickness="2" VerticalAlignment="Stretch"/>
+
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Padding" Value="5,3,5,3" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Background" Value="White">
+
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonCloseStyle5" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Padding" Value="5,3,5,3" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="grid" Margin="0,3">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF1A87D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+
+
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="rectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="#FF0C81D3"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Disabled"/>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused"/>
+                                <vsm:VisualState x:Name="Unfocused"/>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rectangle" StrokeThickness="0" StrokeLineJoin="Round" Margin="0,-5,0,-3" RadiusX="0" RadiusY="0"/>
+                        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Width="{Binding ActualHeight, ElementName=grid}" Height="{Binding ActualHeight, ElementName=grid}" >
+
+                            <Polyline x:Name="polyline"  Stroke="#FFFFFF"   Points="0,0 0,10 10,10 10,0 0,0" StrokeLineJoin="Round" StrokeThickness="2" VerticalAlignment="Stretch"/>
+
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+    <Style  TargetType="{x:Type Common:MyButton}">
+        <Setter Property="Foreground" Value="#FF333333" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Padding" Value="5,3,5,3" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Margin="0">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FFE6E6E6"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FFADADAD"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DisabledVisualElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="FocusedVisualElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FFE6E6E6"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FF8C8C8C"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Unfocused" />
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup>
+                                <VisualState x:Name="Pressed">
+
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FFE6E6E6"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="Bd">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FFADADAD"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="Bd" Stroke="#FFCCCCCC" StrokeThickness="1" Fill="White" />
+                        <StackPanel Margin="0" Orientation="Horizontal" d:LayoutOverrides="Height">
+                            <Image x:Name="image" Height="{Binding ActualHeight, ElementName=ContentControl}" Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}" Margin="3,0,0,0" />
+                            <Rectangle StrokeThickness="2" RadiusX="20" RadiusY="20" Margin="2,3,2,5" Opacity="0.3" Stroke="#FF5D5A5A"/>
+                            <ContentControl x:Name="ContentControl" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="2,0,6,0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalContentAlignment="Center">
+                                <ContentPresenter x:Name="contentPresenter" />
+                            </ContentControl>
+                        </StackPanel>
+                        <Rectangle x:Name="FocusedVisualElement" Visibility="Collapsed" StrokeThickness="2" Stroke="#FF4EC0F5" />
+                        <Rectangle x:Name="DisabledVisualElement" Visibility="Collapsed" Fill="Gray" Opacity="0.003" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <ControlTemplate x:Key="ButtonLogin" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border" Background="#FF286090" BorderBrush="#FF204d74" BorderThickness="1" CornerRadius="3">
+            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF122B40"/>
+
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="#FFADADAD"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True"/>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Button>
+    <code>
+      public class MyButton:Button
+    {
+        private static readonly DependencyProperty IconProperty;
+        public MyButton() : base()
+        {
+           
+        }
+
+        static MyButton()
+        {
+            IconProperty = DependencyProperty.Register("Icon", typeof(Uri), typeof(MyButton),
+             new PropertyMetadata(null, null));
+        }
+
+
+        public Uri Icon
+        {
+            get
+            {
+                return (Uri)GetValue(IconProperty);
+            }
+            set
+            {
+                SetValue(IconProperty, value);
+            }
+        }
+    }
+    </code>
+  
+   <TextBox>
+      public class MyTextBox : TextBox
+    {
+        private static readonly DependencyProperty PlaceHolderProperty;
+        private static readonly DependencyProperty IconProperty;
+        private static readonly DependencyProperty IsPassWordProperty;
+        private static readonly DependencyProperty PassWordProperty;
+
+        public MyTextBox() : base()
+        {
+            this.TextChanged += MyTextBoxTextChanged;
+        }
+
+        private void MyTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!IsPassWord)
+                return;
+            MergerPassword(this.Text);
+            this.TextChanged -= MyTextBoxTextChanged;
+            this.Text = CreatePasswordChars(this.Text.Length);
+            this.CaretIndex = this.Text.Length;
+            this.TextChanged += MyTextBoxTextChanged;
+        }
+
+        private void MergerPassword(string txt)
+        {
+            if (string.IsNullOrEmpty(txt))
+            {
+                this.PassWord = string.Empty;
+                return;
+            }
+            if (PassWord.Length > txt.Length)
+            {
+                PassWord = PassWord.Substring(0, txt.Length);
+            }
+            else
+            {
+                string lastChar = txt.Substring(txt.Length - 1);
+                PassWord += lastChar;
+            }       
+        }
+
+        private string CreatePasswordChars(int len)
+        {
+            if (len <= 0)
+                return string.Empty;
+            string chars = string.Empty;
+            for (int i = 0; i < len; i++)
+            {
+                chars += "*";
+            }
+            return chars;
+        }
+
+        static MyTextBox()
+        {
+            PlaceHolderProperty = DependencyProperty.Register("PlaceHolder", typeof(string), typeof(MyTextBox),
+                new PropertyMetadata(string.Empty, null));
+
+            IconProperty = DependencyProperty.Register("Icon", typeof(Uri), typeof(MyTextBox),
+                new PropertyMetadata(null, null));
+
+            IsPassWordProperty = DependencyProperty.Register("IsPassWord", typeof(bool), typeof(MyTextBox),
+         new PropertyMetadata(false, null));
+
+            PassWordProperty = DependencyProperty.Register("PassWord", typeof(string), typeof(MyTextBox),
+                new PropertyMetadata(string.Empty, null));
+
+        }
+
+        public string PlaceHolder
+        {
+            get
+            {
+                return (string)GetValue(PlaceHolderProperty);
+            }
+            set
+            {
+                SetValue(PlaceHolderProperty, value);
+            }
+        }
+
+        public Uri Icon
+        {
+            get
+            {
+                return (Uri)GetValue(IconProperty);
+            }
+            set
+            {
+                SetValue(IconProperty, value);
+            }
+        }
+
+        public bool IsPassWord
+        {
+            get
+            {
+                return (bool)GetValue(IsPassWordProperty);
+            }
+            set
+            {
+                SetValue(IsPassWordProperty, value);
+            }
+        }
+
+        public string PassWord
+        {
+            get
+            {
+                return (string)GetValue(PassWordProperty);
+            }
+            set
+            {
+                SetValue(PassWordProperty, value);
+            }
+        }
+
+
+    }
+   </TextBox>
+  
+   <BackgroundWorker>
+      public class RptBackgroundWorker : BackgroundWorker
+    {
+        public static Grid Owner { get; set; }
+        private Canvas can;
+        private Storyboard stroyBoard;
+        private Grid grid;
+        public object Tag { set; get; }
+        public RptBackgroundWorker() : base()
+        {
+            if (Owner == null)
+                throw new System.ComponentModel.InvalidEnumArgumentException("Set owner first before create an object");
+        }
+
+        public new void RunWorkerAsync()
+        {
+            AddLoading();
+            base.RunWorkerAsync();
+        }
+
+        protected override void OnRunWorkerCompleted(RunWorkerCompletedEventArgs e)
+        {
+            RemoveLoading();
+            base.OnRunWorkerCompleted(e);
+        }
+
+        public new void RunWorkerAsync(object argument)
+        {
+            AddLoading();
+            base.RunWorkerAsync(argument);
+        }
+
+        private void RemoveLoading()
+        {
+            if (stroyBoard != null)
+                stroyBoard.Stop();
+            if (Owner != null && can != null && Owner.Children.Contains(can))
+                Owner.Children.Remove(can);
+            if (Owner != null && grid != null && Owner.Children.Contains(grid))
+                Owner.Children.Remove(grid);
+            Owner.IsEnabled = true;
+        }
+        private void AddLoading()
+        {
+            can = CreateCanvas();
+            BeginStoryBoard(can);
+            grid = new Grid();
+            grid.Background = new SolidColorBrush(Colors.Black);
+            grid.SetValue(Grid.RowSpanProperty, Owner.RowDefinitions.Count + 1);
+            grid.SetValue(Grid.ColumnSpanProperty, Owner.RowDefinitions.Count + 1);
+            grid.Opacity = 0.2;
+            can.Opacity = 1;
+            grid.VerticalAlignment = VerticalAlignment.Stretch;
+            grid.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Owner.Children.Add(grid);
+            Owner.Children.Add(can);
+            Owner.IsEnabled = false;
+        }
+        public Canvas CreateCanvas()
+        {
+            Canvas canvas = new Canvas();
+            canvas.Height = 200;
+            canvas.Width = 200;
+            int count = 16;
+            for (int i = 0; i < count; i++)
+            {
+                Rectangle rect = new Rectangle();
+                rect.Opacity = ((double)Math.Abs(i - 10) / 10) + 0.1;
+                rect.Width = 30;
+                rect.Height = 15;
+                rect.RadiusX = 3;
+                rect.RadiusY = 3;
+                rect.Fill = new SolidColorBrush(SystemColors.HighlightColor);
+                RotateTransform tran = new RotateTransform();
+                tran.Angle = 360 - (22.5 * i);
+                tran.CenterX = -40;
+                tran.CenterY = 7.5;
+                Canvas.SetLeft(rect, 140);
+                Canvas.SetTop(rect, 92.5);
+                rect.RenderTransform = tran;
+                canvas.Children.Add(rect);
+            }
+
+            canvas.HorizontalAlignment = HorizontalAlignment.Center;
+            canvas.VerticalAlignment = VerticalAlignment.Center;
+            canvas.SetValue(Grid.RowSpanProperty, Owner.RowDefinitions.Count + 1);
+            canvas.SetValue(Grid.ColumnSpanProperty, Owner.RowDefinitions.Count + 1);
+            RotateTransform canRot = new RotateTransform();
+            canRot.Angle = 0;
+            canRot.CenterX = 100;
+            canRot.CenterY = 100;
+            canvas.RenderTransform = canRot;
+            return canvas;
+        }
+
+        public void BeginStoryBoard(FrameworkElement ele)
+        {
+            stroyBoard = new Storyboard();
+            DoubleAnimationUsingKeyFrames frames = new DoubleAnimationUsingKeyFrames();
+            frames.RepeatBehavior = RepeatBehavior.Forever;
+            frames.SpeedRatio = 8;
+            for (int i = 1; i <= 16; i++)
+            {
+                frames.KeyFrames.Add(new DiscreteDoubleKeyFrame(22.5 * i, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(i))));
+            }
+            Storyboard.SetTarget(frames, ele);
+            Storyboard.SetTargetProperty(frames, new PropertyPath("RenderTransform.(RotateTransform.Angle)", null));
+            stroyBoard.Children.Add(frames);
+            stroyBoard.Begin();
+        }
+
+        #region Simple Impents  
+        public static void SampleImp(Action action, Action uiAction)
+        {
+            if (action == null) return;     
+            RptBackgroundWorker worker = new RptBackgroundWorker();
+            worker.Tag = uiAction;
+            worker.DoWork += WorkerDoWork;
+            worker.RunWorkerCompleted += WorkerRunWorkerCompleted;
+            worker.RunWorkerAsync(action);
+        }
+
+        private static void WorkerDoWork(object sender, DoWorkEventArgs e)
+        {
+            Action action = e.Argument as Action;
+            action();
+        }
+
+
+        private static void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RptBackgroundWorker worker = sender as RptBackgroundWorker;
+            Action uiAction = worker.Tag as Action;
+            if (uiAction == null)
+                return;
+            uiAction();
+        }
+        #endregion
+
+        #region SamplyByPara
+        public static void SampleImpRetrunBoolean(Func<bool> action, Action<bool, Exception> uiAction)
+        {
+            if (action == null)
+            {
+                throw new ArgumentNullException("Action can not be null");
+            }
+            List<Delegate> actions = new List<Delegate>();
+            actions.Add(action);
+            RptBackgroundWorker worker = new RptBackgroundWorker();
+            worker.Tag = uiAction;
+            worker.DoWork += WorkerRetrunBooleanDoWork;
+            worker.RunWorkerCompleted += WorkerRetrunBooleanRunWorkerCompleted;
+            worker.RunWorkerAsync(action);
+        }
+
+        private static void WorkerRetrunBooleanDoWork(object sender, DoWorkEventArgs e)
+        {
+            Func<bool> workAction = e.Argument as Func<bool>;
+            e.Result = workAction();
+        }
+
+
+        private static void WorkerRetrunBooleanRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RptBackgroundWorker worker = sender as RptBackgroundWorker;
+            Action<bool, Exception> uiAction = worker.Tag  as Action<bool, Exception>;
+            if (uiAction == null)
+                return;
+            if(e.Error== null)
+                uiAction((bool)e.Result, e.Error);
+            else
+                uiAction(false, e.Error);
+        }
+        #endregion
+
+    }
+   </BackgroundWorker>
+  </Button>
+</Elements>
